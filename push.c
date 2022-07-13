@@ -1,50 +1,33 @@
 #include "monty.h"
 
 /**
- * _push - pushes an element to the stack
- * @stack: head
- * @num_line: number line
+ * push - Function that pushes nodes in the stack
+ * @stack: stack structure
+ * @line_number: Number of instructions
  */
-void _push(stack_t **stack, unsigned int num_line)
+void push(stack_t **stack, unsigned int line_number)
 {
-	stack_t *temp;
+	core_stack_queue(stack, line_number, 0);
+}
 
-	_verify2(stack, num_line);
-	if (global.token)
-	{
-		temp = malloc(sizeof(stack_t));
-		if (temp == NULL)
-		{
-			fputs("Error: malloc failed\n", stderr);
-			exit(EXIT_FAILURE);
-		}
-		temp->n = global.num, temp->next = NULL;
-		temp->prev = NULL;
-		if (*stack)
-		{
-			if (global.flag == 1)
-			{
-				temp->next = *stack;
-				(*stack)->prev = temp;
-				*stack = temp;
-			}
-			else
-			{
-				while ((*stack)->next)
-					*stack = (*stack)->next;
-				(*stack)->next = temp, temp->prev = *stack;
-				while ((*stack)->prev)
-					*stack = (*stack)->prev;
-			}
-		}
-		else
-			*stack = temp;
-	}
-	else
-	{
-		free(global.line), fclose(global.fil);
-		dprintf(2, "L%u: usage: push integer\n", num_line);
-		free_l(stack);
-		exit(EXIT_FAILURE);
-	}
+
+/**
+ * stack - Function that pushes nodes in the stack
+ * @stack: stack structure
+ * @line_number: Number of instructions
+ */
+void stack(stack_t **stack, unsigned int line_number)
+{
+	core_stack_queue(stack, line_number, 1);
+}
+
+
+/**
+ * queue - Function that pushes nodes in the queue
+ * @stack: stack structure
+ * @line_number: Number of instructions
+ */
+void queue(stack_t **stack, unsigned int line_number)
+{
+	core_stack_queue(stack, line_number, 2);
 }
