@@ -1,10 +1,33 @@
-#ifndef MONTY
-#define MONTY
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
+#ifndef MONTY_H
+#define MONTY_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+/**
+ * struct globals - variables globales
+ * @num: integer
+ * @flag: integer
+ * @line: string
+ * @token: string
+ * @opcod: function opcode in Monty
+ * @fil: file
+ */
+typedef struct globals
+{
+int num;
+int flag;
+char *line;
+char *token;
+char *opco;
+FILE *fil;
+} globals_t;
+
+extern globals_t global;
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
  * @n: integer
@@ -16,13 +39,13 @@
  */
 typedef struct stack_s
 {
-	int n;
-	struct stack_s *prev;
-	struct stack_s *next;
+int n;
+struct stack_s *prev;
+struct stack_s *next;
 } stack_t;
 
 /**
- * struct instruction_s - opcoode and its function
+ * struct instruction_s - opcode and its function
  * @opcode: the opcode
  * @f: function to handle the opcode
  *
@@ -31,66 +54,34 @@ typedef struct stack_s
  */
 typedef struct instruction_s
 {
-	char *opcode;
-	void (*f)(stack_t **stack, unsigned int line_number);
+char *opcode;
+void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-extern int value[];
+void _mod(stack_t **stack, unsigned int num_line);
+void _pchar(stack_t **stack, unsigned int num_line);
+void _rotr(stack_t **stack, unsigned int num_line);
+void _rotl(stack_t **stack, unsigned int num_line);
+void _stack(stack_t **stack, unsigned int num_line);
+void _queue(stack_t **stack, unsigned int num_line);
+void _pstr(stack_t **stack, unsigned int num_line);
+void _mul(stack_t **stack, unsigned int num_line);
+void _verify2(stack_t **stack, unsigned int n);
+void _error(stack_t **stack, unsigned int n);
+void free_l(stack_t **stack);
+void _div(stack_t **stack, unsigned int num_line);
+void _sub(stack_t **stack, unsigned int num_line);
+void _nop(stack_t **stack, unsigned int num_line);
+int _verify1(char *num);
+int _size_line(char *line);
+char delete_jump(char *line);
+void _swap(stack_t **stack, __attribute__((unused)) unsigned int num_line);
+void _add(stack_t **stack, __attribute__((unused)) unsigned int num_line);
+void _pint(stack_t **stack, unsigned int num_line);
+void _pop(stack_t **stack, unsigned int num_line);
+void (*func(char *tokens))(stack_t **stack, unsigned int num_line);
+int main(__attribute__((unused)) int argc, char **argv);
+void _pall(stack_t **stack, unsigned int num_line);
+void _push(stack_t **stack, unsigned int num_line);
 
-/* failures.c */
-void check_argc(int argc);
-void check_valid_file(char *filename);
-void check_file_stream(FILE *fp, char *filename);
-void check_opcode(void (*opcode)(), int lineno, char *cmd);
-void check_fail(char *line, FILE *fp, stack_t *head);
-
-/* stack_funcs.c */
-int add_to_stack(stack_t **head, int n);
-void free_stack(stack_t *head);
-int delete_stack_head(stack_t **head);
-int delete_stack_end(stack_t **head);
-int print_stack(stack_t **head);
-
-/* stack_funcs2.c */
-int add_to_queue(stack_t **head, int n);
-
-/* get_opcode_func.c */
-void (*get_opcode_func(char *s))(stack_t **stack, unsigned int ln);
-
-/* helper.c */
-int check_if_number(char *str);
-int check_if_push(char **tok_line, int lineno);
-int is_ascii(int c);
-void check_data_structure(char *opcode);
-
-/* opcode_func.c */
-void stk_push(stack_t **stack, unsigned int ln);
-void stk_pall(stack_t **stack, unsigned int ln);
-void stk_pop(stack_t **stack, unsigned int ln);
-void stk_add(stack_t **stack, unsigned int ln);
-void stk_pint(stack_t **stack, unsigned int ln);
-
-/* opcode_func2.c */
-void stk_swap(stack_t **stack, unsigned int ln);
-void stk_nop(stack_t **stack, unsigned int ln);
-void stk_pchar(stack_t **stack, unsigned int ln);
-void stk_pstr(stack_t **stack, unsigned int ln);
-
-/* opcode_func3.c */
-void stk_rotl(stack_t **stack, unsigned int ln);
-void stk_rotr(stack_t **stack, unsigned int ln);
-void stk_stack(stack_t **stack, unsigned int ln);
-void stk_queue(stack_t **stack, unsigned int ln);
-
-/* opcode_func4.c */
-void stk_sub(stack_t **stack, unsigned int ln);
-void stk_div(stack_t **stack, unsigned int ln);
-void stk_mul(stack_t **stack, unsigned int ln);
-void stk_mod(stack_t **stack, unsigned int ln);
-
-/* string_helper.c */
-int tokenize_line(char *s, char *tokens[]);
-void clear_strings(char *tokens[]);
-int check_empty(const char *s);
-int check_if_comment(char **token);
 #endif
